@@ -62,8 +62,8 @@ export default function Header() {
         {/* Navigation */}
         <nav className="hidden md:flex gap-6 items-center text-base font-medium">
           <Link href="/">Home</Link>
-          <Link href="/result">Result</Link>
-          <Link href="/about">About</Link>
+          <Link href="/user/result">Result</Link>
+          <Link href="/user/about">About</Link>
         </nav>
 
         {/* Right Side */}

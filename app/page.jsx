@@ -17,6 +17,7 @@ export default function Home() {
   };
 
   return (
+    // Can replace this with the home page design of wanderwiz 
     <div className="bg-black min-h-screen text-white p-10">
       <h1 className="text-3xl font-bold mb-6">Wander Wiz</h1>
 
@@ -30,7 +31,7 @@ export default function Home() {
             !
           </p>
 
-          {/* ✅ Sign Out */}
+          {/* Sign Out */}
           <button
             onClick={handleSignOut}
             className="px-4 py-2 bg-red-600 rounded-lg hover:bg-red-700 transition"
