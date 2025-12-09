@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCreateUserWithEmailAndPassword, useSendEmailVerification, } from "react-firebase-hooks/auth";
-import { auth, db } from "../firebase";
+import { auth, db } from "../../firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 

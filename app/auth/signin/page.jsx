@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import {
   useSignInWithEmailAndPassword,
 } from "react-firebase-hooks/auth";
-import { auth } from "../firebase";
+import { auth } from "../../firebase";
 
 export default function SignIn() {
   const router = useRouter();

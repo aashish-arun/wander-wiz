@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase";
@@ -41,11 +40,11 @@ export default function Home() {
         </>
       ) : (
         <div className="flex gap-4">
-          <Link href="/signin" className="underline">
+          <Link href="/auth/signin" className="underline">
             Sign In
           </Link>
 
-          <Link href="/signup" className="underline">
+          <Link href="/auth/signup" className="underline">
             Create An Account
           </Link>
         </div>
