@@ -4,6 +4,7 @@ import "./globals.css";
 import { UserProvider } from "./context/UserContext";
 import Header from "./components/header";
 import Footer from "./components/footer";
+import Script from "next/script";
 
 // Load fonts
 const geistSans = Geist({
@@ -20,12 +21,19 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* Wrap children with UserProvider */}
+
+        {/* Load Google Maps API globally ONCE */}
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+          strategy="beforeInteractive"
+        />
+
         <UserProvider>
           <Header />
-            {children}
+          {children}
           <Footer />
         </UserProvider>
+
       </body>
     </html>
   );
