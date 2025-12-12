@@ -1,60 +1,80 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { GoogleMap, Marker, LoadScript } from "@react-google-maps/api";
+import { useEffect, useState } from "react";
 
 export default function Result() {
   const searchParams = useSearchParams();
   const destination = searchParams.get("destination");
-  const [coords, setCoords] = useState(null);
+  const interest = searchParams.get("interest");
+
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (destination && interest) {
+      const fetchRecommendations = async () => {
+        try {
+          const res = await fetch(
+            `/api/recommendations?destination=${encodeURIComponent(
+              destination
+            )}&interest=${encodeURIComponent(interest)}`
+          );
+          const data = await res.json();
+
+          if (Array.isArray(data.recommendations)) {
+            setRecommendations(data.recommendations);
+          } else {
+            setRecommendations([]);
+          }
+        } catch (err) {
+          console.error(err);
+          setRecommendations([]);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchRecommendations();
+    }
+  }, [destination, interest]);
+
+  if (loading) return <div className="text-white p-4">Loading...</div>;
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-4 bg-[#020914] text-white">
-      <h1 className="text-2xl font-bold mt-10 mb-6 text-center">
-        {destination ? `Your Destination: ${destination}` : "No destination selected"}
+    <div className="bg-[#020914] min-h-screen text-white p-4 flex flex-col items-center">
+      <h1 className="text-2xl font-bold mt-10 text-center">
+        Recommendations for {destination}
       </h1>
+      <h2 className="text-xl mt-4 mb-6 text-center">
+        Based on your interest in {interest}
+      </h2>
 
-      {destination ? (
-        <LoadScript
-          googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-        >
-          {coords ? (
-            <GoogleMap
-              mapContainerStyle={{ width: "100%", maxWidth: "800px", height: "500px" }}
-              center={coords}
-              zoom={14}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
+        {recommendations.map((place, index) => (
+          <div
+            key={index}
+            className="bg-[#111827] rounded-lg shadow-lg hover:shadow-xl transition p-4 flex flex-col gap-3"
+          >
+            <h3 className="text-xl font-semibold">{place.name}</h3>
+
+            <p className="text-yellow-400 font-bold">
+              Rating: {place.rating}
+            </p>
+
+            <p className="text-gray-300">{place.description}</p>
+
+            <a
+              href={place.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block text-blue-400 hover:underline"
             >
-              <Marker position={coords} />
-            </GoogleMap>
-          ) : (
-            <GeocodeMap destination={destination} setCoords={setCoords} />
-          )}
-        </LoadScript>
-      ) : (
-        <p>Please enter a destination first.</p>
-      )}
+              View on Google Maps
+            </a>
+          </div>
+        ))}
+      </div>
     </div>
   );
-}
-
-// Separate component to handle geocoding inside LoadScript
-function GeocodeMap({ destination, setCoords }) {
-  useEffect(() => {
-    if (!window.google) return;
-
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ address: destination }, (results, status) => {
-      if (status === "OK" && results[0]) {
-        setCoords({
-          lat: results[0].geometry.location.lat(),
-          lng: results[0].geometry.location.lng(),
-        });
-      } else {
-        console.error("Geocode failed:", status);
-      }
-    });
-  }, [destination, setCoords]);
-
-  return <p>Loading map...</p>;
 }
