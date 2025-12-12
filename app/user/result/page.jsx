@@ -1,8 +1,10 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
-import RecommendationCard from "../../components/recommendation";
+import Recommendation from "../../components/recommendation";
 
 export default function Result() {
   const searchParams = useSearchParams();
@@ -21,7 +23,6 @@ export default function Result() {
               destination
             )}&interest=${encodeURIComponent(interest)}`
           );
-
           const data = await res.json();
           setRecommendations(Array.isArray(data.recommendations) ? data.recommendations : []);
         } catch (err) {
@@ -52,7 +53,7 @@ export default function Result() {
 
           <div className="flex flex-col gap-6 w-full max-w-5xl">
             {recommendations.map((place, index) => (
-              <RecommendationCard key={index} place={place} />
+              <Recommendation key={index} place={place} />
             ))}
           </div>
         </div>
