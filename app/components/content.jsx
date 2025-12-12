@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import RecommendationCard from "../../components/recommendation";
+import RecommendationCard from "./recommendation";
 
 export default function Content() {
   const searchParams = useSearchParams();
