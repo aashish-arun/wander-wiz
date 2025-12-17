@@ -1,7 +1,6 @@
-// app/layout.jsx
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { UserProvider } from "./context/userContext";
+import Providers from "./providers";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Script from "next/script";
@@ -27,13 +26,12 @@ export default function RootLayout({ children }) {
           strategy="beforeInteractive"
         />
 
-        <UserProvider>
+        <Providers>
           <Header />
           {children}
           <Footer />
-        </UserProvider>
+        </Providers>
       </body>
     </html>
   );
 }
-
