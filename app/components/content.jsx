@@ -1,58 +1,61 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import RecommendationCard from "./recommendation";
+import { useSearchParams } from "next/navigation";
+import RecommendationCard from "./recommendationCard";
+import { saveSearch } from "../lib/saveSearch";
+import { useUser } from "../context/userContext";
 
 export default function Content() {
   const searchParams = useSearchParams();
   const destination = searchParams.get("destination");
   const interest = searchParams.get("interest");
 
+  const { authUser } = useUser();
+
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (destination && interest) {
-      const fetchRecommendations = async () => {
-        try {
-          const res = await fetch(
-            `/api/recommendations?destination=${encodeURIComponent(
-              destination
-            )}&interest=${encodeURIComponent(interest)}`
-          );
+    if (!destination || !interest) return;
 
-          const data = await res.json();
-          setRecommendations(Array.isArray(data.recommendations) ? data.recommendations : []);
-        } catch (err) {
-          console.error(err);
-          setRecommendations([]);
-        } finally {
-          setLoading(false);
-        }
-      };
+    const fetchData = async () => {
+      setLoading(true);
 
-      fetchRecommendations();
-    }
+      const res = await fetch(
+        `/api/recommendations?destination=${destination}&interest=${interest}`
+      );
+
+      const data = await res.json();
+      setRecommendations(data.recommendations || []);
+      setLoading(false);
+    };
+
+    fetchData();
   }, [destination, interest]);
 
-  if (loading) return <div className="text-white p-4">Loading...</div>;
+  // ✅ THIS IS WHAT YOU WERE MISSING
+  useEffect(() => {
+    if (!authUser) return;
+    if (recommendations.length === 0) return;
+
+    saveSearch(
+      authUser.uid,
+      destination,
+      interest,
+      recommendations
+    );
+  }, [recommendations]);
+
+  if (loading) {
+    return <p className="text-white p-4">Loading...</p>;
+  }
 
   return (
-    <div className="bg-[#020914] min-h-screen text-white p-4 flex flex-col items-center">
-      <h1 className="text-2xl font-bold mt-10 text-center">
-        Recommendations for {destination}
-      </h1>
-
-      <h2 className="text-xl mt-4 mb-6 text-center">
-        Based on your interest in {interest}
-      </h2>
-
-      <div className="flex flex-col gap-6 w-full max-w-5xl">
-        {recommendations.map((place, index) => (
-          <RecommendationCard key={index} place={place} />
-        ))}
-      </div>
+    <div className="space-y-4">
+      {recommendations.map((place, i) => (
+        <RecommendationCard key={i} place={place} />
+      ))}
     </div>
   );
 }

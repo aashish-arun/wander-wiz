@@ -1,7 +1,7 @@
-"use client";
+// app/layout.jsx
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { UserProvider } from "./context/UserContext";
+import { UserProvider } from "./context/userContext";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import Script from "next/script";
@@ -21,7 +21,6 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-
         {/* Load Google Maps API globally ONCE */}
         <Script
           src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
@@ -33,8 +32,8 @@ export default function RootLayout({ children }) {
           {children}
           <Footer />
         </UserProvider>
-
       </body>
     </html>
   );
 }
+

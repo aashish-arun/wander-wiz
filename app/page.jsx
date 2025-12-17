@@ -41,6 +41,9 @@ export default function Home() {
       <h1 className="text-2xl font-bold mt-10 text-center">
         AI-powered travel recommendations
       </h1>
+      <p className="text-1xl font-semibold italic mb-2 text-center text-amber-300">
+        Sign in to save the search results.
+      </p>
 
       {/* Destination Form */}
       <div className="bg-[#020914] p-6 rounded-lg mt-6 mb-20 border border-white w-full max-w-md mx-auto">

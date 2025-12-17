@@ -1,6 +1,6 @@
 "use client";
 
-export default function Recommendation({ place }) {
+export default function RecommendationCard({ place }) {
   return (
     <div
       className="bg-[#111827] rounded-lg shadow-lg hover:shadow-xl 
