@@ -6,7 +6,7 @@ import { db } from "../../firebase";
 import { useUser } from "../../context/userContext";
 import HistoryCard from "../../components/historyCard";
 
-export default function HistoryPage() {
+export default function History() {
   const { authUser, loading } = useUser();
   const [history, setHistory] = useState([]);
 
